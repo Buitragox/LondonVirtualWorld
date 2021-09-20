@@ -38,11 +38,33 @@ public:
       glPushMatrix();
       if (shader) shader->begin();
          
-         glTranslatef(0, 0, 1);
+         glTranslatef(0, 0, 2); //Alejar/Acercar la imagen
+         glRotatef(20, 1, 0, 0); //Vista desde arriba
+         glRotatef(-75, 0, 1, 0); //Vista desde el lado
+
          glPushMatrix();
-         //glRotatef(timer010 * 360, 0.5, 1.0f, 0.1f);
-         glRotatef(20, 1, 0, 0);
-         modelos3d[0]->DibujarMalla(0, 0, 0);
+         glScalef(1.1f, 1.0f, 1.0f);
+         modelos3d[0]->DibujarMalla(0, 0, 0); //Ground
+         glPopMatrix();
+
+         glPushMatrix();
+         modelos3d[1]->DibujarMalla(-0.1f, 0.27f, -0.7f); //Big church
+         glPopMatrix();
+
+         glPushMatrix();
+         modelos3d[2]->DibujarMalla(0.0f, 0.1f, 0.85f); //Houses
+         glPopMatrix();
+
+         glPushMatrix();
+         modelos3d[3]->DibujarMalla(-0.4f, 0.25f, -0.18f); //Small church
+         glPopMatrix();
+
+         glPushMatrix();
+         modelos3d[4]->DibujarMalla(0.2f, 0.2f, -0.28f); //Trees
+         glPopMatrix();
+
+         glPushMatrix();
+         modelos3d[5]->DibujarMalla(0.6f, 0.1f, -0.24f); //Bench
          glPopMatrix();
       if (shader) shader->end();
       glutSwapBuffers();
@@ -76,10 +98,18 @@ public:
       bUp = true;
 
       DemoLight();
-
+      std::vector<std::string> filenames{"ground.obj", "bigchurch.obj", "houses.obj",
+                                        "smallchurch.obj", "trees.obj", "bench.obj"};
+      std::string fullpath;
       modelos3d = std::vector<Objeto3D*>();
-      modelos3d.push_back(new Objeto3D());
-      modelos3d[0]->AbrirMalla("./mallas/VirtualWorld.obj");
+      for (int i = 0; i < filenames.size(); i++)
+      {
+          modelos3d.push_back(new Objeto3D());
+          fullpath = "./mallas/" + filenames[i];
+          //std::cout << fullpath << "\n";
+          modelos3d[i]->AbrirMalla(fullpath);
+      }
+      
 
 	}
 
