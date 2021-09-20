@@ -1,0 +1,20 @@
+In one of your functions used to initialize OpenGL state, but not in the display function, you will need to add the following code snippets to read in one of these models. First, make sure the glm.h file is included by your main program. Then, create a global variable that you can use to store a reference to your model 
+
+GLMmodel *objmodel_ptr;
+
+Then, use this code to load the model and prepare it to be rendered
+
+if (!objmodel_ptr)
+ {
+    objmodel_ptr = glmReadOBJ("bunny.obj");
+    if (!objmodel_ptr)
+        exit(0);
+
+    glmUnitize(objmodel_ptr);
+    glmFacetNormals(objmodel_ptr);
+    glmVertexNormals(objmodel_ptr, 90.0);
+ }
+
+After this code is executed, the model will have been loaded, normals will have been created and smoothed, and the model will be ready to render. To draw the loaded model, add the following code into your display function:
+
+glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL); 
