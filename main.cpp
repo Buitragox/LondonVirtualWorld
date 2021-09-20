@@ -38,7 +38,7 @@ public:
       glPushMatrix();
       if (shader) shader->begin();
          
-         glTranslatef(0, 0, 2); //Alejar/Acercar la imagen
+         glTranslatef(0, 0, 1.5); //Alejar/Acercar la imagen
          glRotatef(20, 1, 0, 0); //Vista desde arriba
          glRotatef(-75, 0, 1, 0); //Vista desde el lado
 
