@@ -11,9 +11,11 @@ class Objeto3D
 {
 private:
 	GLMmodel* objmodel_ptr;
+	bool hasTexture;
 public:
 	Objeto3D();
+	void SetHasTexture(bool flag);
 	void AbrirMalla(std::string pathMalla);
-	void DibujarMalla(float x, float y, float z);
+	void DibujarMalla(float x, float y, float z, GLuint texid = 0);
 };
 

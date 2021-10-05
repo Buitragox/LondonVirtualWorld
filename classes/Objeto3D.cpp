@@ -3,6 +3,7 @@
 Objeto3D::Objeto3D()
 {
     objmodel_ptr = nullptr;
+    hasTexture = false;
 }
 
 void Objeto3D::AbrirMalla(std::string malla)
@@ -21,10 +22,25 @@ void Objeto3D::AbrirMalla(std::string malla)
     }
 }
 
-void Objeto3D::DibujarMalla(float x, float y, float z)
+void Objeto3D::DibujarMalla(float x, float y, float z, GLuint texid)
 {
     glPushMatrix();
     glTranslatef(x, y, z);
-    glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL);
+    if (hasTexture)
+    {
+        glBindTexture(GL_TEXTURE_2D, texid);
+        glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+    }
+    else
+    {
+        glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL);
+    }
+    
+    //glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL);
     glPopMatrix();
+}
+
+void Objeto3D::SetHasTexture(bool flag)
+{
+    hasTexture = flag;
 }
