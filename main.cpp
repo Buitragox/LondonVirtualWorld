@@ -31,6 +31,7 @@ protected:
    bool mXI;
    float posXI;
    GLuint texid;
+   float cameraMove;
 
 
 public:
@@ -72,11 +73,10 @@ public:
 
             glTranslatef(0, 0, 1.5); //Alejar/Acercar la imagen
             glRotatef(20, 1, 0, 0); //Vista desde arriba
-            glRotatef(timer010 * 360, 0.0f, 0.001f, 0.0f);
+            glRotatef(cameraMove * 360, 0.0f, 0.001f, 0.0f);
             //glRotatef(-75, 0, 1, 0); //Vista desde el lado
 
             glPushMatrix();
-        
          
             glScalef(1.1f, 1.0f, 1.0f);
             modelos3d[0]->DibujarMalla(0, 0, 0); //Ground
@@ -100,8 +100,6 @@ public:
             //modelos3d[3]->SetHasTexture(true);
             modelos3d[3]->DibujarMalla(-0.6f, 0.23f, -0.23f/*, texid*/); //Small church
             glPopMatrix();
-
-         
 
             glPushMatrix();
             modelos3d[5]->DibujarMalla(0.6f, 0.1f, -0.24f); //Bench
@@ -158,6 +156,8 @@ public:
         mXI = false;
         posXI = 0.0f;
 
+        cameraMove = 0.0f;
+
         std::vector<std::string> filenames{"ground.obj", "bigchurch2.obj", "houses.obj",
                                         "smallchurch.obj", "trees.obj", "bench.obj"};
         std::string fullpath;
@@ -198,10 +198,25 @@ public:
 
 	virtual void OnKeyDown(int nKey, char cAscii)
 	{       
-		if (cAscii == 27) // 0x1b = ESC
-		{
-			this->Close(); // Close Window!
-		} 
+        if (cAscii == 27) // 0x1b = ESC
+        {
+            this->Close(); // Close Window!
+        }
+        else if (cAscii == 'a')
+        {
+            cameraMove += 0.008f;
+            if (cameraMove > 1.0f)
+                cameraMove = 0.0f;
+            std::cout << cameraMove << "\n";
+            
+        }
+        else if (cAscii == 'd')
+        {
+            cameraMove -= 0.008f;
+            if (cameraMove < 0.0f)
+                cameraMove = 1.0f;
+            std::cout << cameraMove << "\n";
+        }
 	};
 
 	virtual void OnKeyUp(int nKey, char cAscii)
@@ -210,7 +225,10 @@ public:
          shader->enable();
       else if (cAscii == 'f') // f: Fixed Function
          shader->disable();
+      
+
 	}
+
 
    void UpdateTimer()
    {
