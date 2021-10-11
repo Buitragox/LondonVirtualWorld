@@ -86,8 +86,7 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            //modelos3d[3]->SetHasTexture(true);
-            modelos3d[3]->DibujarMalla(-0.6f, 0.23f, -0.23f/*, texid*/); //Small church
+            modelos3d[3]->DibujarMalla(-0.6f, 0.23f, -0.23f); //Small church
             glPopMatrix();
 
             glPushMatrix();
@@ -109,12 +108,6 @@ public:
                 modelos3d[6]->DibujarMalla(carriageMove, 0.375f, 1.2f); //Carriage
             }
             
-
-            if (facingLeft)
-            {
-
-            }
-                
             
             glPopMatrix();
 
