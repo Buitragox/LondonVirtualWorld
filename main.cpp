@@ -28,22 +28,17 @@ protected:
    float timer010;  // timer counting 0->1->0
    bool bUp;        // flag if counting up or down.
    std::vector<Objeto3D*> modelos3d;
-   bool mXI;
-   float posXI;
    GLuint texid;
    float cameraMove;
-
+   float carriageMove;
+   bool facingLeft;
 
 public:
 	myWindow(){}
 
     void initialize_textures(void)
     {
-        //int w, h;
         GLubyte* data = 0;
-        //data = glmReadPPM("soccer_ball_diffuse.ppm", &w, &h);
-        //std::cout << "Read soccer_ball_diffuse.ppm, width = " << w << ", height = " << h << std::endl;
-        //dib1 = loadImage("soccer_ball_diffuse.jpg"); //FreeImage
         glGenTextures(1, &texid);
         glBindTexture(GL_TEXTURE_2D, texid);
         glTexEnvi(GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -72,7 +67,7 @@ public:
         if (shader) shader->begin();
 
             glTranslatef(0, 0, 1.5); //Alejar/Acercar la imagen
-            glRotatef(20, 1, 0, 0); //Vista desde arriba
+            glRotatef(20.0f, 1.0f, 0.0f, 0.0f); //Vista desde arriba
             glRotatef(cameraMove * 360, 0.0f, 0.001f, 0.0f);
             //glRotatef(-75, 0, 1, 0); //Vista desde el lado
 
@@ -83,12 +78,6 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            //GLfloat material_Ka[] = { 0.0f, 0.0f, 0.0f, 1.0f }; //Luz ambiental
-            //GLfloat material_Kd[] = { 0.0f, 0.0f, 0.0f, 1.0f }; //Luz difusa
-            //GLfloat material_Ks[] = { 1.0f, 0.0f, 0.0f, 1.0f }; //Poner en 0 para anular luz especular
-            //glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_Ka); //Aplicar ambiental
-            //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_Kd); //Aplicar difusa
-            //glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_Ks); //Aplicar especular
             modelos3d[1]->DibujarMalla(-0.1f, 0.27f, -0.7f); //Big church
             glPopMatrix();
 
@@ -102,19 +91,44 @@ public:
             glPopMatrix();
 
             glPushMatrix();
-            modelos3d[5]->DibujarMalla(0.6f, 0.1f, -0.24f); //Bench
+            modelos3d[5]->DibujarMalla(0.55f, 0.04f, -0.33f); //Bench
             glPopMatrix();
+
+            glPushMatrix();
+            glScalef(0.2f, 0.2f, 0.2f);
+            if (facingLeft)
+            {
+                //glTranslatef(0.0f, 0.0f, -1.5f);
+                glRotatef(180, 0.0f, 1.0f, 0.0f);
+                
+                modelos3d[6]->DibujarMalla(-carriageMove, 0.375f, -1.2f); //Carriage
+                //glTranslatef(0.0f, 0.0f, 1.5f);
+            }
+            else
+            {
+                modelos3d[6]->DibujarMalla(carriageMove, 0.375f, 1.2f); //Carriage
+            }
+            
+
+            if (facingLeft)
+            {
+
+            }
+                
+            
+            glPopMatrix();
+
         if (shader) shader->end();
 
         //Mallas con textura
         if (shaderTex) shaderTex->begin();
             glPushMatrix();
             modelos3d[4]->SetHasTexture(true);
-            modelos3d[4]->DibujarMalla(-0.0f, 0.15f, -0.28f, texid); //Trees
+            modelos3d[4]->DibujarMalla(-0.0f, 0.15f, -0.3f, texid); //Trees
             glPopMatrix();
         if (shaderTex) shaderTex->end();
 
-
+        
         glutSwapBuffers();
         glPopMatrix();
 
@@ -153,13 +167,13 @@ public:
         timer010 = 0.0f;
         bUp = true;
 
-        mXI = false;
-        posXI = 0.0f;
-
+        facingLeft = false;
+        carriageMove = 0.0f;
         cameraMove = 0.0f;
 
         std::vector<std::string> filenames{"ground.obj", "bigchurch2.obj", "houses.obj",
-                                        "smallchurch.obj", "trees.obj", "bench.obj"};
+                                        "smallchurch.obj", "trees.obj", "bench.obj", 
+                                        "horse_and_carriage.obj"};
         std::string fullpath;
         modelos3d = std::vector<Objeto3D*>();
         for (int i = 0; i < filenames.size(); i++)
@@ -216,6 +230,18 @@ public:
             if (cameraMove < 0.0f)
                 cameraMove = 1.0f;
             std::cout << cameraMove << "\n";
+        }
+        else if (cAscii == 'j')
+        {
+            facingLeft = true;
+            if (carriageMove - 0.05f > -4.0f)
+                carriageMove -= 0.05f;
+        }
+        else if (cAscii == 'l')
+        {
+            facingLeft = false;
+            if (carriageMove + 0.05f < 4.0f)
+                carriageMove += 0.05f;
         }
 	};
 
